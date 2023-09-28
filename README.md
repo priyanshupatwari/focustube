@@ -1,16 +1,21 @@
 # What it does ?
+Lets you watch youtube videos by just pasting the youtube url or video id.
 
 # How to use ?
 ### Visit the site
-[f]
+[focustubex.netlify.app](https://focustubex.netlify.app/)
+### Or just Deploy it yourself on Netlify or Vercel
 ```
-Just 
+Keep in mind the static site will be served from **build** directory
 ```
+
 
 ## See tailwind css site for Configuration
+
+## Run this while in development phase
 $ npx tailwindcss -i ./build/input.css -o ./build/output.css --watch
 
-## Run http-sever in a folder
+### Run http-sever
 
 1. npm install -g http-server
 
