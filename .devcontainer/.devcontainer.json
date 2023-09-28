@@ -1,0 +1,19 @@
+{
+	"name": "Ubuntu",
+	"image":"mcr.microsoft.com/devcontainers/universal:2",
+	"features": {
+		"ghcr.io/devcontainers/features/docker-in-docker:2": {}
+	},
+	"forwardPorts": [
+		5050,
+		6060,
+		7070,
+		8080,
+		9090
+	],
+	"hostRequirements": {
+		"cpus": 2
+	},
+	"remoteUser": "root"
+	// "postCreateCommand": "apt-get update && apt-get install -y fuse"
+}
