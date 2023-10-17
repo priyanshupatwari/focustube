@@ -1,198 +1,131 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="output.css" rel="stylesheet" />
+    <link rel="icon" href="/icons/32x32.png" type="image/x-icon">
+    <link rel="manifest" href="manifest.json" />
+    <title>focustube</title>
+    <style>
+      .main_player {
+        background-color: #281e3e4e;
+      }
+    </style>
+  </head>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="output.css" rel="stylesheet">
-  <link rel="manifest" href="manifest.json">
-  <title>focustube</title>
-  <style>
-    .main_player{
-      background-color: #281e3e4e;
-    }
-  </style>
-</head>
-
-<body>
-  <div id="youtube-player-container" class="hidden invisible">
-    <!-- hidden invisible  -->
-    <!-- iframe replaces this -->
-  <div id="player" class="main_player absolute top-0 bottom-0 left-0 right-0"></div>
-    <script>
-      // 2. This code loads the IFrame Player API code asynchronously.
-      var tag = document.createElement('script');
-      tag.src = "https://www.youtube.com/iframe_api";
-      var firstScriptTag = document.getElementsByTagName('script')[0];
-      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-    </script>
-  </div>
-  <div class="z-10 flex items-start justify-center w-screen h-screen bg-gray-900 home-container ">
-    <div class="w-full max-w-xl p-4 mx-3 bg-gray-800 rounded-lg mt-11">
-      <div class="flex items-center justify-center">
-        <input id="youtube-link-input"
-          class="flex-grow p-2 mr-2 text-white bg-gray-700 border border-gray-700 rounded-md sm:text-lg focus:outline-none"
-          placeholder="Enter any YouTube link or Video Id">
-        <button id="go-btn" class="flex-shrink px-4 py-2 text-white bg-blue-700 rounded-md sm:text-xl">Go</button>
-      </div>
-      <div class="mt-4 watchPrev">
-        <button id="restore-prev-vid" class="px-4 py-2 text-white bg-green-700 rounded-md sm:text-xl">
-          Continue where you left
-        </button>
-      </div>
-    </div>
-    <div class="absolute z-50 go-back-home top-1/2 right-2">
-      <button id="back-to-home" class="p-2 text-white bg-blue-500 rounded-md opacity-0">
-        &#127968
-      </button>
+  <body class="bg-gray-900">
+    <div id="youtube-player-container" class="invisible hidden">
+      <!-- hidden invisible  -->
+      <!-- iframe replaces this -->
+      <div
+        id="player"
+        class="z-50 fixed top-0 bottom-0 left-0 right-0 main_player"
+      ></div>
       <script>
-        const button = document.getElementById('back-to-home');
-        let timeoutId; // To store the timeout ID
-        document.addEventListener('mousemove', () => {
-          clearTimeout(timeoutId); // Clear the previous timeout
-          button.classList.remove('opacity-0');
-          button.classList.add('opacity-100');
-
-          // Set a new timeout to change the opacity back to 50% after 1 second (adjust as needed)
-          timeoutId = setTimeout(() => {
-            button.classList.remove('opacity-100');
-            button.classList.add('opacity-0');
-          }, 1000); // Change opacity back after 1 second of mouse inactivity
-        });
+        // 2. This code loads the IFrame Player API code asynchronously.
+        var tag = document.createElement("script");
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName("script")[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
       </script>
     </div>
-</body>
 
+    <div
+      class="z-10 flex flex-col items-center justify-start w-screen px-2 home-container"
+    >
+      <!-- Category -->
+      <div class="w-full max-w-2xl p-4 mx-2 bg-gray-800 rounded-lg mt-11">
+        <strong class="text-gray-400 sm:text-xl"> Category </strong>
+        <!-- category-container -->
+        <ul id="category_list" class="flex flex-col mt-4 space-y-1">
+          <li class="p-2 text-gray-100 bg-gray-700 rounded-lg category-item">
+            <div
+              class="flex items-center justify-between text-base font-semibold tracking-wide"
+            >
+              <span class="capitalize text-lg">${category_name} </span>
+              <div>
+                <button
+                  data-index="${index}"
+                  class="p-1 border border-gray-600 rounded-full edit"
+                >
+                  🖋
+                </button>
+                <button
+                  data-index="${index}"
+                  class="p-1 border border-gray-600 rounded-full delete"
+                >
+                  &#x1F5D1;
+                </button>
+              </div>
+            </div>
+            <div class="flex items-center justify-center mt-1">
+              <input
+                id=""
+                class="flex-grow p-1 mr-1 text-white bg-gray-600 border border-gray-500 rounded-lg sm:p-2 sm:mr-2 sm:text-lg focus:outline-none"
+                placeholder="Enter any YouTube link or Video Id"
+              />
+              <button
+                data-index="${index}"
+                class="flex-shrink p-1 mr-1 text-white bg-blue-700 rounded-lg sm:px-4 sm:py-2 sm:mr-2 sm:text-xl"
+              >
+                Go
+              </button>
+              <button
+                data-index="${index}"
+                data-seekTo="${seekTo}"
+                data-vidId="${yt_vid_id}"
+                class="p-1 text-white bg-green-700 rounded-lg sm:p-2 sm:text-xl"
+              >
+                Continue
+              </button>
+            </div>
+          </li>
+        </ul>
+        <!-- Add New Category -->
+        <div
+          class="relative flex max-w-xs mt-4 border-2 border-gray-600 rounded-full"
+        >
+          <input
+            id="new_category_name"
+            class="flex-grow p-2 text-white bg-gray-700 border border-gray-700 rounded-full sm:text-lg focus:outline-none"
+            placeholder="Enter New Category"
+          />
+          <button
+            id="add_category_btn"
+            class="z-10 absolute right-0 px-4 py-2 text-white bg-green-700 rounded-full sm:text-xl"
+          >
+            +
+          </button>
+        </div>
+      </div>
+
+      <!-- go to Home btn -->
+      <div class="fixed z-50 go-back-home top-16 left-2">
+        <button
+          id="back-to-home"
+          class="p-2 text-white bg-green-800 rounded-full opacity-30 transition-opacity duration-300"
+        >
+          Go Back
+        </button>
+        <script>
+          const button = document.getElementById("back-to-home");
+          let timeoutId; // To store the timeout ID
+          document.addEventListener("mousemove", () => {
+            clearTimeout(timeoutId); // Clear the previous timeout
+            button.classList.remove("opacity-30");
+            button.classList.add("opacity-75");
+
+            // Set a new timeout to change the opacity back to 50% after 1 second (adjust as needed)
+            timeoutId = setTimeout(() => {
+              button.classList.remove("opacity-75");
+              button.classList.add("opacity-30");
+            }, 1000); // Change opacity back after 1 second of mouse inactivity
+          });
+        </script>
+      </div>
+    </div>
+  </body>
 </html>
 
-<script>
-  var player;
-  var intervalId;
-  // ------------------------------------------------------------
-  const playerContainer = document.getElementById("youtube-player-container");
-  const ytLink = document.getElementById("youtube-link-input")
-  const goBtn = document.getElementById("go-btn")
-  const restoreBtn = document.getElementById("restore-prev-vid")
-  const homeBtn = document.getElementById("back-to-home")
-  // ------------------------------------------------------------
-  goBtn.addEventListener("click", initiatePlayer);
-  restoreBtn.addEventListener("click", restorePrevVid);
-  homeBtn.addEventListener("click", destroyPlayer);
-  // ------------------------------------------------------------
-  function initiatePlayer() {
-    const youtubeLink = ytLink.value;
-    const videoId = extractVideoId(youtubeLink);
-    if (videoId && isValidYouTubeVideoId(videoId)) {
-      loadPlayer(videoId, 0); // videoId:alphanummeric, SeekTo::Number:Seconds
-    } else {
-      alert("Invalid Youtube Link !");
-    }
-  }
-  function restorePrevVid() {
-    const retrievedData = getData('storageData')
-    if (retrievedData !== null) {
-      const { videoId, seekTo } = retrievedData;
-      // console.log(videoId);
-      loadPlayer(videoId, seekTo)
-    } else {
-      alert('No data found in localStorage.');
-    }
-  }
-  function destroyPlayer() {
-    if (player) player.destroy();
-    clearInterval(intervalId);
-    playerContainer.classList.add("hidden");
-    playerContainer.classList.add("invisible");
-  }
-
-  // ------------------------- Helper Methods ------------------------------------------
-  function loadPlayer(videoId, seekTo) {
-    // update prev-video link from youtube 
-    putData('storageData', { videoId: videoId, seekTo: seekTo });
-    destroyPlayer();
-
-    playerContainer.classList.remove("hidden");
-    playerContainer.classList.remove("invisible");
-
-    player = new YT.Player('player', {
-      height: '100%',
-      width: '100%',
-      playerVars: {
-        'playsinline': 1,
-        'rel': 0,
-        'autoplay': 0,
-        'fs': 1,
-        'enablejsapi': 1,
-        'expflag': 'embeds_enable_muted_autoplay:true',
-      },
-      events: {
-        'onReady': onPlayerReady,
-        'onStateChange': onPlayerStateChange
-      }
-    });
-    function onPlayerReady(event) {
-      player.loadVideoById(videoId, seekTo);
-      // update storage data for restorePrevVid() when you visit next.
-      intervalId = setInterval(() => {
-        // console.log("Current time = .", player.getCurrentTime());
-        putData('storageData', { videoId: videoId, seekTo: player.getCurrentTime() });
-      }, 5000);
-    }
-    function onPlayerStateChange(event) { }
-  }
-  function extractVideoId(youtubeLink) {
-    if (!youtubeLink) {
-      console.log("youtubeLink is null or empty.");
-      return null;
-    }
-    // Check if the link contains the video ID
-    if (youtubeLink.includes("watch?v=")) {
-      // Extract video ID from a full YouTube link
-      const params = new URLSearchParams(new URL(youtubeLink).search);
-      const videoId = params.get("v");
-      return videoId;
-    } else if (youtubeLink.includes("youtu.be/")) {
-      // Extract video ID from a short YouTube link
-      const parts = youtubeLink.split("/");
-      const videoId = parts.pop();
-      return videoId.split("?")[0]; // Remove any query parameters
-    } else if (youtubeLink.includes("/live/")) {
-      const index = youtubeLink.indexOf("/live/") + 6; // Adding 6 to skip "/live/"
-      if (index > 0 && index < youtubeLink.length) {
-        const videoId = youtubeLink.substring(index);
-        return videoId.split("?")[0]; // Remove any query parameters
-      }
-    }
-    // Return the input string as the video ID
-    return youtubeLink;
-  }
-  function isValidYouTubeVideoId(id) {
-    if (id.length !== 11) {
-      return false;
-    }
-    const validCharacters = /^[a-zA-Z0-9_-]+$/;
-    if (!validCharacters.test(id)) {
-      return false;
-    }
-    return true;
-  }
-  // Function to get data from localStorage
-  function getData(key) {
-    try {
-      const data = localStorage.getItem(key);
-      return data !== null ? JSON.parse(data) : null;
-    } catch (error) {
-      console.error('Error getting data from localStorage:', error);
-      return null;
-    }
-  }
-  // Function to put data into localStorage
-  function putData(key, value) {
-    try {
-      const data = JSON.stringify(value);
-      localStorage.setItem(key, data);
-    } catch (error) {
-      console.error('Error storing data in localStorage:', error);
-    }
-  }
-</script>
+<script type="module" src="./index.js"></script>
