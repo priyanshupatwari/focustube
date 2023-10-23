@@ -3,7 +3,7 @@ Lets you watch youtube videos by just pasting the youtube url or video id.
 
 # How to use ?
 ### Visit the site
-[focustubex.netlify.app](https://focustubex.netlify.app/)
+[focustub.netlify.app](https://focustub.netlify.app/)
 ### Or just Deploy it yourself on Netlify or Vercel
 ```
 Keep in mind the static site will be served from **build** directory
